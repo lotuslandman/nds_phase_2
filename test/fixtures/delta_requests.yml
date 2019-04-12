@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  request_time: 2018-04-19 03:09:54
+  delta_stream: one
+
+two:
+  request_time: 2018-04-19 03:09:54
+  delta_stream: two

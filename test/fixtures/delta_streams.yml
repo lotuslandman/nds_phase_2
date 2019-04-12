@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  frequency_minutes: 1
+  delta_reachback: 1
+
+two:
+  frequency_minutes: 1
+  delta_reachback: 1

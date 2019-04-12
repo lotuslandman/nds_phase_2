@@ -1,0 +1,8 @@
+<h3>Test Environment (2nd fl) --- <a href="url">FNTB .81 environment</a>   ---  <a href="url">Production Environment</a></h3>
+<h3>Delta Requests --- <a href="url">Bulk Requests</a>   ---  <a href="url">Transaction Id Requests</a></h3>
+<h3><a href="graph">by Hour</a> --- by Scenario</h3>
+<%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+<%= column_chart Notam.group(:scenario).count %>
+
+
+

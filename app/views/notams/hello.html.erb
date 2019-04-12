@@ -1,0 +1,7 @@
+<h1>Notams#hello</h1>
+<p>Find me in app/views/notams/hello.html.erb</p>
+<%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+<% DeltaStream.update_database %>
+<%= column_chart Notam.group(:scenario).count %>
+<%= column_chart Notam.delta_request_chart %>
+
