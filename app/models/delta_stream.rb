@@ -7,7 +7,7 @@ class DeltaStream < ApplicationRecord
   
   def apr2019_file_name_array  # go into the filesystem ".../.../files_delta/" and find all delta responses
     stream_number = self.id.to_s
-    dir_result = Dir.glob("/home/scott/dev/nds/stream_files/stream_#{stream_number.to_s}_files/2019-4/files_delta/*").sort.collect do |fnp|
+    dir_result = Dir.glob("/home/scott/dev/nds/nds_phase_1/stream_files/stream_#{stream_number.to_s}_files/2019-4/files_delta/*").sort.collect do |fnp|
       '../files_delta/'+File.basename(fnp)  # have to back out of rails directory with ../
     end
     file_name_array =[]
