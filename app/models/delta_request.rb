@@ -65,10 +65,9 @@ class DeltaRequest < ApplicationRecord
   end
 
   def handle_full_delta_request(file_name) # parse_response_time_save_pretty_store_in_db  WARNING: hardcoded April 2019
-    path = "/home/scott/dev/nds/ndsapp1/llog.txt"
     fn_frag = file_name.sub(" UTC","").split(' ').join('T')
 
-    path_to_delta_files = "/home/scott/dev/nds/stream_files/stream_#{self.delta_stream.id}_files/2019-4/files_delta" # full_response_file_dir
+    path_to_delta_files = "/home/scott/nds_phase_1/stream_files/stream_#{self.delta_stream.id}_files/2019-4/files_delta" # full_response_file_dir
     file_path_response = path_to_delta_files + "/"        + 'delta_'+fn_frag+'.xml'
     file_path_time     = path_to_delta_files + "_time/"   + 'delta_'+fn_frag+'_time.xml'
     file_path_pretty   = path_to_delta_files + "_pretty/" + 'delta_'+fn_frag+'_pretty.xml'
