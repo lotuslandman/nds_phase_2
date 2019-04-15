@@ -7,7 +7,7 @@ class DeltaStream < ApplicationRecord
   
   def apr2019_file_name_array  # go into the filesystem ".../.../files_delta/" and find all delta responses
     stream_number = self.id.to_s
-    dir_result = Dir.glob("/home/scott/dev/nds/nds_phase_1/stream_files/stream_#{stream_number.to_s}_files/2019-4/files_delta/*").sort.collect do |fnp|
+    dir_result = Dir.glob("/home/scott/nds_phase_1/stream_files/stream_#{stream_number.to_s}_files/2019-4/files_delta/*").sort.collect do |fnp|
       '../files_delta/'+File.basename(fnp)  # have to back out of rails directory with ../
     end
     file_name_array =[]
@@ -26,7 +26,7 @@ class DeltaStream < ApplicationRecord
 #    File.open(path, 'w') { |rf| rf.puts "Top DB for DS #{self.id} with #{dates_to_get.size} (#{date_array_from_filesystem.size}-#{date_array_from_database.size}) delta_requests"}
 
   def create_pretty_response_file_and_fill_database
-    path = "/home/scott/dev/nds/ndsapp1/llog.txt"
+#    path = "/home/scott/dev/nds/ndsapp1/llog.txt"
     request_type  = :delta
     date_array_from_filesystem = apr2019_file_name_array
     date_array_from_database  = self.delta_requests.collect {|dr| dr.start_time.to_s}  
