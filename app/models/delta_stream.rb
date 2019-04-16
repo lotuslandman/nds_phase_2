@@ -4,16 +4,32 @@ class DeltaStream < ApplicationRecord
 
   validates :frequency_minutes, presence: true
   validates :delta_reachback, presence: true
-  
-  def apr2019_file_name_array  # go into the filesystem ".../.../files_delta/" and find all delta responses
+
+  def compute_stream_file_dir
     stream_number = self.id.to_s
-    dir_result = Dir.glob("/home/scott/nds_phase_1/stream_files/stream_#{stream_number.to_s}_files/2019-4/files_delta/*").sort.collect do |fnp|
-      '../files_delta/'+File.basename(fnp)  # have to back out of rails directory with ../
+    month_str = Time.now.month.to_s
+    year_str = Time.now.year.to_s
+    # the following string will produce something like this: "../stream_files/stream_1_files/2019-4/files_delta/*"
+    if Rails.env.development?
+      stream_file_dir = "../stream_files/stream_#{stream_number.to_s}_files/#{year_str}-#{month_str}"
+    elsif Rails.env.production?
+      stream_file_dir = "../nds_phase_1/stream_files/stream_#{stream_number.to_s}_files/#{year_str}-#{month_str}"
+    else
+      puts "unknown Rails environment"
+      exit
+    end
+    stream_file_dir
+  end
+  
+  def file_name_array  # go into the filesystem ".../.../files_delta/" and find all delta responses
+    stream_file_dir = compute_stream_file_dir()
+    dir_result = Dir.glob(stream_file_dir+"/files_delta/*").sort.collect do |fnp|
+      File.basename(fnp)  # have to back out of rails directory with ../
     end
     file_name_array =[]
     dir_result.sort.collect do |file_name_raw|
       begin
-        x = file_name_raw.split("delta")[2].split('.')[0][1..-1]
+        x = file_name_raw.split("delta")[1].split('.')[0][1..-1]
         y = x.sub('T', ' ')+' UTC'
         file_name_array.append(y)
       rescue
@@ -26,9 +42,8 @@ class DeltaStream < ApplicationRecord
 #    File.open(path, 'w') { |rf| rf.puts "Top DB for DS #{self.id} with #{dates_to_get.size} (#{date_array_from_filesystem.size}-#{date_array_from_database.size}) delta_requests"}
 
   def create_pretty_response_file_and_fill_database
-#    path = "/home/scott/dev/nds/ndsapp1/llog.txt"
     request_type  = :delta
-    date_array_from_filesystem = apr2019_file_name_array
+    date_array_from_filesystem = file_name_array
     date_array_from_database  = self.delta_requests.collect {|dr| dr.start_time.to_s}  
     dates_to_get_full = date_array_from_filesystem - date_array_from_database
     should_be_empty = date_array_from_database - date_array_from_filesystem    # should be no items in DB that are not in the filesystem
@@ -36,7 +51,7 @@ class DeltaStream < ApplicationRecord
     dates_to_get_full_sort = dates_to_get_full.sort
     puts "dates_to_get_full_sort #{dates_to_get_full_sort.size} = date_array_from_filesystem #{date_array_from_filesystem.size} - date_array_from_database = #{date_array_from_database.size}"
     if dates_to_get_full_sort.size > 7   # limit chunk to put in database to 55
-      dates_to_get = dates_to_get_full_sort[-1..-1]  # [-1..-1] gets one from troubleshooting
+      dates_to_get = dates_to_get_full_sort[-50..-1]  # [-1..-1] gets one from troubleshooting
     else
       dates_to_get = dates_to_get_full_sort
     end
