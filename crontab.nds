@@ -1,0 +1,26 @@
+PATH=/home/scott/bin:/home/scott/.local/bin:/home/scott/.rbenv/shims:/home/scott/.rbenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/scott/dev/FNTB_NIRU3/FNS
+#PATH=/opt/someApp/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+SHELL=/bin/bash
+HOME=/home/scott/dev/nds/nds_phase_2
+#  m   h  dom mon dow   command
+   *   *   *   *   *    cd /home/scott/dev/nds/nds_phase_2 && RAILS_ENV=development /home/scott/.rbenv/shims/bundle exec rake nds:load_stream_1 >> nds_logs/cron_load_stream_1.log
+
+# 
+#   cd /Users/you/projects/myrailsapp && /usr/local/bin/rake RAILS_ENV=production myrailsapp:purge_audits
+#   cd /Users/you/projects/myrailsapp && /usr/local/bin/rake RAILS_ENV=production myrailsapp:purge_audits
+#   cd /Users/you/projects/myrailsapp && /usr/local/bin/rake RAILS_ENV=production myrailsapp:purge_audits
+
+
+#   *   *   *   *   *    /home/scott/.rbenv/shims/bundle exec rails runner -e development "app/services/test.rb" >> test.log
+
+
+#   *   *   *   *   *    /home/scott/.rbenv/shims/bundle exec rails runner -e development "app/services/test.rb" >> test.log
+#   *   *   *   *   *    /home/scott/.rbenv/shims/bundle exec rails runner -e development "app/services/update_database_1.rb" 
+#   *   *   *   *   *    /home/scott/.rbenv/shims/bundle exec rails runner -e development "app/services/update_database_1.rb" >> /home/scott/dev/nds/nds_phase_2/nds_logs/cron_1.log
+#    * *    *   *   *    /home/scott/dev/nds/nds_phase_2/fill_database_1.sh >> /home/scott/dev/nds/nds_phase_2/nds_logs/cron_1.log
+#   * *    *   *   *    /home/scott/dev/nds/ndsapp1/fill_database_2.sh >> /home/scott/dev/nds_logs/cron_2.log
+#   */3 *    *   *   *   /home/scott/.rbenv/shims/ruby /home/scott/dev/nds/ruby_executing/stream_1.rb >> /home/scott/dev/nds_logs/stream_1.log
+#   */3 *    *   *   *   /home/scott/.rbenv/shims/ruby /home/scott/dev/nds/ruby_executing/stream_2.rb >> /home/scott/dev/nds_logs/stream_2.log
+#    *	*    *   *   *   /usr/bin/python /home/scott/dev/FNTB_NIRU3/FNS/main.py >> /home/scott/dev/FNTB_NIRU3/FNS/tt3_file.log
+#     *	*    *   *   *   /home/scott/dev/FNTB_NIRU3/FNS/run_tt3.sh
+#      */5	*    *	 *   *	 /home/scott/dev/FNTB_NIRU3/FNS/test.sh

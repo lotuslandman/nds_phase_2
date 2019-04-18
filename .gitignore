@@ -22,3 +22,4 @@ config/secrets.yml
 config/database.yml
 log/
 /nds_logs/cron_1.log
+/nds_logs/*
