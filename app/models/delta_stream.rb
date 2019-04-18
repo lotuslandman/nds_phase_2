@@ -14,8 +14,10 @@ class DeltaStream < ApplicationRecord
       stream_file_dir = "../stream_files/stream_#{stream_number.to_s}_files/#{year_str}-#{month_str}"
     elsif Rails.env.production?
       stream_file_dir = "../nds_phase_1/stream_files/stream_#{stream_number.to_s}_files/#{year_str}-#{month_str}"
+      puts "stream_file_dir = #{stream_file_dir}"
     else
       puts "unknown Rails environment"
+      puts "stream_file_dir = " + "../stream_files/stream_#{stream_number.to_s}_files/#{year_str}-#{month_str}"
       exit
     end
     stream_file_dir
