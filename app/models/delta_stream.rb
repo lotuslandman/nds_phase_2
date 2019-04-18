@@ -13,7 +13,7 @@ class DeltaStream < ApplicationRecord
     if Rails.env.development?
       stream_file_dir = "../stream_files/stream_#{stream_number.to_s}_files/#{year_str}-#{month_str}"
     elsif Rails.env.production?
-      stream_file_dir = "../../nds_phase_1/stream_files/stream_#{stream_number.to_s}_files/#{year_str}-#{month_str}"
+      stream_file_dir = "../../../nds_phase_1/stream_files/stream_#{stream_number.to_s}_files/#{year_str}-#{month_str}"
       puts "pwd #{system("pwd")}"
       puts "stream_file_dir = #{stream_file_dir}"
     else
