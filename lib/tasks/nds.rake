@@ -13,7 +13,7 @@ namespace :nds do
     ds_1.create_pretty_response_file_and_fill_database
   end
 
-  desc "load database stream 1 (ACY)"
+  desc "load database stream 3 (ACY)"
   task :load_stream_3 => :environment do
     ds_1 = DeltaStream.find_by_id(3)
     ds_1 ||= DeltaStream.create(id: 3, frequency_minutes: 3, delta_reachback: 6)

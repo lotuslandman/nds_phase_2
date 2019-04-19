@@ -55,11 +55,12 @@ class DeltaStream < ApplicationRecord
     dates_to_get_full_sort = dates_to_get_full.sort
     puts "dates_to_get_full_sort #{dates_to_get_full_sort.size} = date_array_from_filesystem #{date_array_from_filesystem.size} - date_array_from_database = #{date_array_from_database.size}"
     if dates_to_get_full_sort.size > 7   # limit chunk to put in database to 55
-      dates_to_get = dates_to_get_full_sort[-25..-1]  # [-1..-1] gets one from troubleshooting
+      dates_to_get = dates_to_get_full_sort[-1..-1]  # [-1..-1] gets one from troubleshooting
     else
       dates_to_get = dates_to_get_full_sort
     end
     loop = 0
+    puts "dates_to_get.size =  #{dates_to_get.size}"
     dates_to_get.collect do |file_date|
       file_name = file_date.to_s   # Time to string
       @delta_request = self.delta_requests.create()  # create new delta_request from this delta_stream
