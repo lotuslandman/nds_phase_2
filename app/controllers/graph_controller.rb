@@ -96,8 +96,8 @@ class GraphController < ApplicationController
     redirect_to :action => "graph"
   end
 
-  def last_day
-    session[:start_date] = (Time.now - 24.hours).to_s
+  def last_half_day
+    session[:start_date] = (Time.now - 12.hours).to_s
     session[:end_date] = Time.now.to_s
     redirect_to :action => "graph"
   end

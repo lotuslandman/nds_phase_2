@@ -55,7 +55,7 @@ class DeltaStream < ApplicationRecord
     dates_to_get_full_sort = dates_to_get_full.sort
     puts "dates_to_get_full_sort #{dates_to_get_full_sort.size} = date_array_from_filesystem #{date_array_from_filesystem.size} - date_array_from_database = #{date_array_from_database.size}"
     if dates_to_get_full_sort.size > 7   # limit chunk to put in database to 55
-      dates_to_get = dates_to_get_full_sort[-10..-1]  # [-1..-1] gets one from troubleshooting
+      dates_to_get = dates_to_get_full_sort[-30..-1]  # [-1..-1] gets one from troubleshooting
     else
       dates_to_get = dates_to_get_full_sort
     end

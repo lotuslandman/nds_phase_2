@@ -23,17 +23,12 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
   <%= text_field_tag(:scenario) %>
   <%= submit_tag("Submit") %>
 <% end %>
-Current Start: <%= session[:start_date] %><br>
-Current End: <%= session[:end_date] %><br>
+Current Start: <%= session[:start_date] %>  ----- Current End: <%= session[:end_date] %><br>
 <% hours = (Time.parse(session[:end_date]) - Time.parse(session[:start_date]))/60.0/60.0 %>
-Current Duration: <%= hours %> hours or <%= hours/24 %> days  <br>
-<br>
-Time now is: <%= Time.now.to_s %><br>
-Shift Range: <a href="shift_left"><</a> <a href="shift_right">></a><br>
-Expand Range: <a href="expand_left"><<</a> <a href="expand_right">>></a><br>
-<a href="last_hour">Show last hour</a><br>
-<a href="last_day">Show last 24 hours</a><br>
+Current Duration: <%= hours %> hours or <%= hours/24 %> days ----- Time now is: <%= Time.now.to_s %><br>
 
+Shift Range: <a href="shift_left"><</a> <a href="shift_right">></a> ----- Expand Range: <a href="expand_left"><<</a> <a href="expand_right">>></a><br>
+<a href="last_hour">Show last hour</a> ----- <a href="last_half_day">Show last 12 hours</a><br>
 
 <h4 style="color:silver">Date Range:</h4>
   <table style="width:100">

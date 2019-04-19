@@ -24,8 +24,8 @@ Rails.application.routes.draw do
   get 'graph/expand_right'
   post 'graph/expand_right'
 
-  get 'graph/last_day'
-  post 'graph/last_day'
+  get 'graph/last_half_day'
+  post 'graph/last_half_day'
   get 'graph/last_hour'
   post 'graph/last_hour'
 
