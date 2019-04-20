@@ -98,6 +98,7 @@ class DeltaStream < ApplicationRecord
     synced_date_array
   end
 
+  # select delta_requests from between begin time and end time of chart
   def get_drs_from_range(start_date, end_date)
     self.delta_requests.select do |dr|
       begin
@@ -130,46 +131,34 @@ class DeltaStream < ApplicationRecord
   def column_chart_data(start_date, end_date, scenario, y_axis)
     relevant_delta_requests = get_drs_from_range(start_date, end_date)
     # makes a hash of relevant delta_requests between start and end dates filling with start_time and duration
-    relevant_dr_duration_hash = {}
-    relevant_dr_duration_hash_1 = {}
+    plot_dr_hash_blue = {}
+    plot_dr_hash_red = {}
     relevant_delta_requests.collect do |dr|
       ind = round_to_earlier_3_min_sync_date(dr.start_time)  # start time
       case y_axis
       when "response_time"
-        relevant_dr_duration_hash[ind] = dr.duration           # duration could try dr.notams.size
+        plot_dr_hash_blue[ind] = dr.duration           # duration could try dr.notams.size
       when "number_of_notams"
-        notam_and_notam_scenario = dr.scenario_notams_a(scenario)
-        relevant_dr_duration_hash[ind] = notam_and_notam_scenario[0]
-        relevant_dr_duration_hash_1[ind] = notam_and_notam_scenario[1]
+        plot_dr_hash_blue[ind] = dr.notams.size
+        plot_dr_hash_red[ind]  = dr.scenario_notams(scenario).size
       when "not_parseable"
-        relevant_dr_duration_hash[ind] = (dr.not_parseable ? 1 : 0)  # 
+        plot_dr_hash_blue[ind]  = (dr.not_parseable ? 1 : 0)
       end
     end
-    notams_all_1 = []
-    notams_flt_1 = []
+    notams_blue_1 = []
+    notams_red_1  = []
     synced_date_array = create_array_uniform_dates(start_date, end_date)
 
     synced_date_array.collect do |s_date|
-      x = relevant_dr_duration_hash[s_date]
-      if x.nil?
-        x = 0.0
-        puts "Missing: Could not find a delta response in DB for this date: #{s_date.to_s}"  # should write to log file
-      end
-      notams_all_1 << {s_date.to_s => x}
-
-      y = relevant_dr_duration_hash_1[s_date]
-      if y.nil?
-        y = 0.0
-        puts "Missing: Could not find a number of notams w scenario in DB for this date: #{s_date.to_s}"  # should write to log file
-      end
-      notams_flt_1 << {s_date.to_s => y}
+      notams_blue_1 << {s_date.to_s => plot_dr_hash_blue[s_date]} 
+      notams_red_1 << {s_date.to_s => plot_dr_hash_red[s_date]} 
     end
 
-    notams_all_2 = notams_all_1.inject{|memo, el| memo.merge( el ){|k, old_v, new_v| old_v + new_v}}
-    notams_flt_2 = notams_flt_1.inject{|memo, el| memo.merge( el ){|k, old_v, new_v| old_v + new_v}}
-    all_notams_w_filtered = [
-      {name: "Blue Filtered Notams", data: notams_all_2},
-      {name: "Red Filtered Notams", data: notams_flt_2}
+    notams_blue_2 = notams_blue_1.inject{|memo, el| memo.merge( el ){|k, old_v, new_v| old_v + new_v}}
+    notams_red_2  = notams_red_1.inject{ |memo, el| memo.merge( el ){|k, old_v, new_v| old_v + new_v}}
+    [
+      {name: "Blue Filtered Notams", data: notams_blue_2},
+      {name: "Red Filtered Notams", data: notams_red_2}
     ]
   end
 end

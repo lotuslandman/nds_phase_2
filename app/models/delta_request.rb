@@ -88,11 +88,9 @@ class DeltaRequest < ApplicationRecord
     end
   end
 
-  def scenario_notams_a(scenario)
-    self_notams = self.notams
+  def scenario_notams(scenario)
 #    self_notams_scenario = self_notams.by_scenario(602)    # this works but it is even slower than the select loop around self_notams
-    self_notams_scenario = self_notams.select{|notam| notam.scenario == scenario}
-    [self_notams.size, self_notams_scenario.size]
+    self_notams_scenario = self.notams.select{|notam| notam.scenario == scenario}
   end
   
 end
