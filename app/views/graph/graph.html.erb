@@ -1,110 +1,154 @@
-<h1>Plotting:
-<%= "Response Time" if session[:y_axis] == "response_time" %>
-<%= "Number of NOTAMs" if session[:y_axis] == "number_of_notams" %>
-<%= "Not Parseable" if session[:y_axis] == "not_parseable" %>
- in 
-<%= "FNTB (.75)" if session[:env] == "fntb" %>
-<%= "Production (OEX)" if session[:env] == "prod" %>
-<%= "ACY 2nd Floor" if session[:env] == "acy" %>
-</h1>
+<h1><%= @plot_header %></h1>
+<%= @change_controls %>
 Change (<a href="fntb">FNTB</a>, <a href="prod">Production</a>, <a href="acy">ACY 2nd floor test</a>)<br>
 Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Number of Notams</a>, <a href="not_parseable">Response Not Parseable</a>)
-
 <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
-
 <%= column_chart @get_column_chart_data %>
-
-<%= form_tag(controller: "graph", action: "graph", method: "get") do %>
-  <%= label_tag(:q, "Start:") %>
-  <%= text_field_tag(:start_graph) %>
-  <%= label_tag(:q, "End:") %>
-  <%= text_field_tag(:end_graph) %>
-  <%= label_tag(:q, "Scenario:") %>
-  <%= text_field_tag(:scenario) %>
-  <%= submit_tag("Submit") %>
-<% end %>
-Current Start: <%= session[:start_date] %>  ----- Current End: <%= session[:end_date] %><br>
 <% hours = (Time.parse(session[:end_date]) - Time.parse(session[:start_date]))/60.0/60.0 %>
-Current Duration: <%= hours %> hours or <%= hours/24 %> days ----- Time now is: <%= Time.now.to_s %><br>
-
-Shift Range: <a href="shift_left"><</a> <a href="shift_right">></a> ----- Expand Range: <a href="expand_left"><<</a> <a href="expand_right">>></a><br>
-<a href="last_hour">Show last hour</a> ----- <a href="last_half_day">Show last 12 hours</a><br>
-
-<h4 style="color:silver">Date Range:</h4>
   <table style="width:100">
     <colgroup>
+      <col style="background-color: silver">
+      <col style="background-color: silver">
+      <col style="background-color: silver">
+      <col style="background-color: silver">
+      <col style="background-color: silver">
+      <col style="background-color: silver">
       <col style="background-color: silver">
       <col style="background-color: silver">
     </colgroup>
   <tr>
     <th>Start Date:</th>
     <th>End Date:</th> 
+    <th>Duration:</th> 
+    <th>Current Time:</th> 
+    <th>Shift Range:</th> 
+    <th>Expand Range:</th> 
+    <th>Show last hour: </th> 
+    <th>Show last 12 hours:</th> 
   </tr>
   <tr>
-    <td><i><%= session[:start_date].to_s %></i> </td> 
-    <td><i><%= session[:end_date].to_s %></i> </td> 
+    <td><%= session[:start_date].to_s %> </td> 
+    <td><%= session[:end_date].to_s %> </td> 
+    <td><%= hours %> hours or <%= (hours/24).round(2) %> days </td>
+    <td> <%= Time.now.to_s %>     </td>
+    <td> <a href="shift_left"><</a> <a href="shift_right">></a> </td>
+    <td> <a href="expand_left"><<</a> <a href="expand_right">>></a> </td>
+    <td> <a href="last_hour">Show last hour</a> </td>
+    <td> <a href="last_half_day">Show last 12 hours</a> </td>
   </tr>
-</table>
-<h4 style="color:blue">Blue FILTER BY:</h4>
-  <table style="width:100">
+  </table>
+
+  <%= form_tag(controller: "graph", action: "graph", method: "get") do %>
+  <%= label_tag(:q, "Start:") %>
+  <%= text_field_tag(:start_graph) %>
+  <%= label_tag(:q, "End:") %>
+  <%= text_field_tag(:end_graph) %>
+
+<table>
+  <tr>
+    <td>
+<table style="width:100">
     <colgroup>
+      <col style="background-color: silver">
       <col style="background-color: silver">
       <col style="background-color: silver">
     </colgroup>
   <tr>
-    <th>Filter</th>
-    <th>Filter Status</th> 
+    <th style="color:blue">Blue FILTER BY:</th>
+    <th>Filter In</th> 
+    <th>Filter Out</th> 
   </tr>
   <tr>
-    <td>Scenario</td>
-    <td><i>None</i> </td> 
+    <td>Scenario 6000</td>
+    <td>
+      <%= check_box_tag(:blue_bool_in_scenario_6000) %>
+      <%= label_tag(:blue_bool_in_scenario_6000, "") %>
+    </td> 
+    <td>
+      <%= check_box_tag(:blue_bool_out_scenario_6000) %>
+      <%= label_tag(:blue_bool_out_scenario_6000, "") %>
+    </td> 
   </tr>
   <tr>
     <td>xsi:nil="true" present</td>
-    <td><i>No</i> </td> 
+    <td>
+      <%= check_box_tag(:blue_bool_in_xsi_nil_true) %>
+      <%= label_tag(:blue_bool_in_xsi_nil_true, "") %>
+    </td> 
+    <td>
+      <%= check_box_tag(:blue_bool_out_xsi_nil_true) %>
+      <%= label_tag(:blue_bool_out_xsi_nil_true, "") %>
+    </td> 
   </tr>
   <tr>
     <td>bad href with #</td>
-    <td><i>No</i> </td> 
-  </tr>
-  <tr>
-    <td>href missing pointer</td>
-    <td><i>No</i> </td> 
-  </tr>
-  <tr>
-    <td>FICON</td>
-    <td><i>No</i> </td> 
+    <td>
+      <%= check_box_tag(:blue_bool_in_bad_href) %>
+      <%= label_tag(:blue_bool_in_bad_href, "") %>
+    </td> 
+    <td>
+      <%= check_box_tag(:blue_bool_out_bad_href) %>
+      <%= label_tag(:blue_bool_out_bad_href, "") %>
+    </td> 
   </tr>
 </table>
 
-<h4 style="color:red">Red FILTER BY:</h4>
+    </td>
+    <td>
+      
+    </td>
+    <td>
+      
   <table style="width:100">
     <colgroup>
       <col style="background-color: silver">
       <col style="background-color: silver">
+      <col style="background-color: silver">
     </colgroup>
   <tr>
-    <th>Filter</th>
-    <th>Filter Status</th> 
+    <th style="color:red">Red FILTER BY:</th>
+    <th>Filter In</th> 
+    <th>Filter Out</th> 
   </tr>
   <tr>
-    <td>Scenario</td>
-    <td><i><%= @scenario %> </i> </td> 
+    <td>Scenario 6000</td>
+    <td>
+      <%= check_box_tag(:red_bool_in_scenario_6000) %>
+      <%= label_tag(:red_bool_in_scenario_6000, "") %>
+    </td> 
+    <td>
+      <%= check_box_tag(:red_bool_out_scenario_6000) %>
+      <%= label_tag(:red_bool_out_scenario_6000, "") %>
+    </td> 
   </tr>
   <tr>
     <td>xsi:nil="true" present</td>
-    <td><i>No</i> </td> 
+    <td>
+      <%= check_box_tag(:red_bool_in_xsi_nil_true) %>
+      <%= label_tag(:red_bool_in_xsi_nil_true, "") %>
+    </td> 
+    <td>
+      <%= check_box_tag(:red_bool_out_xsi_nil_true) %>
+      <%= label_tag(:red_bool_out_xsi_nil_true, "") %>
+    </td> 
   </tr>
   <tr>
     <td>bad href with #</td>
-    <td><i>No</i> </td> 
-  </tr>
-  <tr>
-    <td>href missing pointer</td>
-    <td><i>No</i> </td> 
-  </tr>
-  <tr>
-    <td>FICON</td>
-    <td><i>No</i> </td> 
+    <td>
+      <%= check_box_tag(:red_bool_in_bad_href) %>
+      <%= label_tag(:red_bool_in_bad_href, "") %>
+    </td> 
+    <td>
+      <%= check_box_tag(:red_bool_out_bad_href) %>
+      <%= label_tag(:red_bool_out_bad_href, "") %>
+    </td> 
   </tr>
 </table>
+
+    </td>
+  </tr>
+</table>
+
+  <%= submit_tag("Submit") %>
+  <% end %>
+      <%= @scenario %>

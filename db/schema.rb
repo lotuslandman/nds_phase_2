@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20190315012758) do
     t.string "transaction_id"
     t.string "scenario"
     t.boolean "xsi_nil_error"
+    t.boolean "href_with_pound"
     t.datetime "end_position"
     t.bigint "delta_request_id"
     t.datetime "created_at", null: false

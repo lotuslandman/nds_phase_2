@@ -8,6 +8,12 @@ class DeltaRequest < ApplicationRecord
   validates :end_time, presence: true
 #  validates :parseable, presence: true # apparently setting to false fails validation
 
+  def count_filtered_notams(filter_color) # 'red' or 'blue'
+    self.notams.select do |notam|
+      notam.filter_selected_in(filter_color)
+    end
+  end
+
   def parse_and_store_time_info_to_delta_request(response_time_info_line)
     rts = response_time_info_line.split(',')
     start_time = rts[0].strip
@@ -91,6 +97,10 @@ class DeltaRequest < ApplicationRecord
   def scenario_notams(scenario)
 #    self_notams_scenario = self_notams.by_scenario(602)    # this works but it is even slower than the select loop around self_notams
     self_notams_scenario = self.notams.select{|notam| notam.scenario == scenario}
+  end
+  
+  def href_notams()
+    self_notams_scenario = self.notams.select{|notam| notam.href_with_pound}
   end
   
 end

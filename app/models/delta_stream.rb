@@ -128,26 +128,32 @@ class DeltaStream < ApplicationRecord
 #      {name: "Red Filtered Notams", data: notams_flt_2}
 #    ]
 #  end
+
   def column_chart_data(start_date, end_date, scenario, y_axis)
     relevant_delta_requests = get_drs_from_range(start_date, end_date)
     # makes a hash of relevant delta_requests between start and end dates filling with start_time and duration
     plot_dr_hash_blue = {}
     plot_dr_hash_red = {}
+    synced_date_array = create_array_uniform_dates(start_date, end_date)
     relevant_delta_requests.collect do |dr|
       ind = round_to_earlier_3_min_sync_date(dr.start_time)  # start time
       case y_axis
       when "response_time"
         plot_dr_hash_blue[ind] = dr.duration           # duration could try dr.notams.size
       when "number_of_notams"
+        # BLUE
         plot_dr_hash_blue[ind] = dr.notams.size
-        plot_dr_hash_red[ind]  = dr.scenario_notams(scenario).size
+#        plot_dr_hash_blue[ind] = dr.count_filtered_notams("blue")
+        # RED
+#        plot_dr_hash_red[ind]  = dr.scenario_notams(scenario).size
+        #        plot_dr_hash_red[ind]  = dr.href_notams.size
+        plot_dr_hash_red[ind]  = dr.count_filtered_notams("red")
       when "not_parseable"
         plot_dr_hash_blue[ind]  = (dr.not_parseable ? 1 : 0)
       end
     end
     notams_blue_1 = []
     notams_red_1  = []
-    synced_date_array = create_array_uniform_dates(start_date, end_date)
 
     synced_date_array.collect do |s_date|
       notams_blue_1 << {s_date.to_s => plot_dr_hash_blue[s_date]} 
@@ -161,7 +167,10 @@ class DeltaStream < ApplicationRecord
       {name: "Red Filtered Notams", data: notams_red_2}
     ]
   end
+
 end
+
+
 
 ###### Hoon demo #########
 #  def column_chart_data(start_date, end_date, scenario, y_axis)

@@ -28,10 +28,39 @@ class Notam < ApplicationRecord
     xsi_nil_list = notam_doc.xpath(".//*[@nil='true'][text()]")
     self.xsi_nil_error = xsi_nil_list.size > 0
     begin
+      self.href_with_pound = (notam_doc.xpath(".//associatedAirportHeliport").attribute('href').value.to_s[0] == '#')
+    rescue
+      false
+    end
+    begin
       self.save!
     rescue
       puts "could not save notam #{notam.id} from delta_request #{self.delta_request}"
     end
+  end
+
+  def scenario_6000
+    self.scenario == '6000'
+  end
+  
+  def filter_selected_in(filter_color)
+    if filter_color == "blue"
+      return true if scenario_6000 && @blue_bool_in_scenario_6000
+      return false if not scenario_6000 && @blue_bool_out_scenario_6000
+      return true if xsi_nil_error && @blue_bool_in_xsi_nil_error
+      return false if not xsi_nil_error && @blue_bool_out_xsi_nil_error
+      return true if href_with_pound && @blue_bool_in_bad_href
+      return false if not href_with_pound && @blue_bool_out_bad_href
+    end
+    if filter_color == "red"
+      return true if scenario_6000 && @red_bool_in_scenario_6000
+      return false if not scenario_6000 && @red_bool_out_scenario_6000
+      return true if xsi_nil_error && @red_bool_in_xsi_nil_error
+      return false if not xsi_nil_error && @red_bool_out_xsi_nil_error
+      return true if href_with_pound && @red_bool_in_bad_href
+      return false if not href_with_pound && @red_bool_out_bad_href
+    end
+    return true  # default is to include in so when no checkboxes are selected the notam is counted in the filter
   end
 
 end

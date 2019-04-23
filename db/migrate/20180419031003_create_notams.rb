@@ -4,6 +4,7 @@ class CreateNotams < ActiveRecord::Migration[5.1]
       t.string :transaction_id
       t.string :scenario
       t.boolean :xsi_nil_error
+      t.boolean :href_with_pound
       t.datetime :end_position
       t.references :delta_request, foreign_key: true
 

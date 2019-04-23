@@ -34,15 +34,45 @@ class GraphController < ApplicationController
     session[:end_date] = end_date_string
     Time.parse(end_date_string)
   end
+
+  def make_plot_header
+    header_text = "Plotting: "
+    header_text += "Response Time" if session[:y_axis] == "response_time"
+    header_text += "Number of NOTAMs" if session[:y_axis] == "number_of_notams"
+    header_text += "Not Parseable" if session[:y_axis] == "not_parseable" 
+    header_text += ' in '
+    header_text += "FNTB (.75)" if session[:env] == "fntb"
+    header_text += "Production (OEX)" if session[:env] == "prod"
+    header_text += "ACY 2nd Floor" if session[:env] == "acy"
+    header_text
+  end
+
+  def update_filter_variables
+    @blue_bool_in_scenario_6000 = (params["blue_bool_in_scenario_6000"] == "1")
+    @blue_bool_out_scenario_6000 = (params["blue_bool_out_scenario_6000"] == "1")
+    @blue_bool_in_xsi_nil_true = (params["blue_bool_in_xsi_nil_true"] == "1")
+    @blue_bool_out_xsi_nil_true = (params["blue_bool_out_xsi_nil_true"] == "1")
+    @blue_bool_in_bad_href = (params["blue_bool_in_bad_href"] == "1")
+    @blue_bool_out_bad_href = (params["blue_bool_out_bad_href"] == "1")
+    @red_bool_in_scenario_6000 = (params["red_bool_in_scenario_6000"] == "1")
+    @red_bool_out_scenario_6000 = (params["red_bool_out_scenario_6000"] == "1")
+    @red_bool_in_xsi_nil_true = (params["red_bool_in_xsi_nil_true"] == "1")
+    @red_bool_out_xsi_nil_true = (params["red_bool_out_xsi_nil_true"] == "1")
+    @red_bool_in_bad_href = (params["red_bool_in_bad_href"] == "1")
+    @red_bool_out_bad_href = (params["red_bool_out_bad_href"] == "1")
+  end
   
   def graph
-#   update_database_for_all_streams
+    #   update_database_for_all_streams
+    update_filter_variables
+    @plot_header = make_plot_header
     @ds = DeltaStream.find_by_id(environment_to_stream_map)   # uses session[:env] to get the right DeltaStream
     @start_date = find_start_of_range
     @end_date = find_end_of_range
-    @scenario  = params[:scenario]  # if no scenario entered no need to store
+    @red_scenario  = params[:red_scenario]  # if no scenario entered no need to store
     @y_axis = session[:y_axis]
-    @get_column_chart_data = @ds.column_chart_data(@start_date, @end_date, @scenario, @y_axis) if ((@start_date - @end_date) < 31.days)
+    binding.pry
+    @get_column_chart_data = @ds.column_chart_data(@start_date, @end_date, @red_scenario, @y_axis) if ((@start_date - @end_date) < 31.days)
   end
 
 #  def scenario
