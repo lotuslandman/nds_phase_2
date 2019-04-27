@@ -43,24 +43,26 @@ class Notam < ApplicationRecord
     self.scenario == '6000'
   end
   
-  def filter_selected_in(filter_color)
-    if filter_color == "blue"
-      return true if scenario_6000 && @blue_bool_in_scenario_6000
-      return false if not scenario_6000 && @blue_bool_out_scenario_6000
-      return true if xsi_nil_error && @blue_bool_in_xsi_nil_error
-      return false if not xsi_nil_error && @blue_bool_out_xsi_nil_error
-      return true if href_with_pound && @blue_bool_in_bad_href
-      return false if not href_with_pound && @blue_bool_out_bad_href
-    end
-    if filter_color == "red"
-      return true if scenario_6000 && @red_bool_in_scenario_6000
-      return false if not scenario_6000 && @red_bool_out_scenario_6000
-      return true if xsi_nil_error && @red_bool_in_xsi_nil_error
-      return false if not xsi_nil_error && @red_bool_out_xsi_nil_error
-      return true if href_with_pound && @red_bool_in_bad_href
-      return false if not href_with_pound && @red_bool_out_bad_href
-    end
-    return true  # default is to include in so when no checkboxes are selected the notam is counted in the filter
+  def filter_selected_in(filter)
+    fh = filter.filter_hash
+    raise "Can't have both in and out scenario_6000 specified" if fh[:bool_in_scenario_6000] && fh[:bool_out_scenario_6000] 
+    raise "Can't have both in and out xsi_nil_error specified" if fh[:bool_in_xsi_nil_true] && fh[:bool_out_xsi_nil_true] 
+    raise "Can't have both in and out bad_href specified" if fh[:bool_in_bad_href] && fh[:bool_out_bad_href]
+    scenario_6000_in  = (   scenario_6000   ) && fh[:bool_in_scenario_6000]
+    scenario_6000_out = (not scenario_6000  ) && fh[:bool_out_scenario_6000]
+    xsi_nil_true_in   = (    xsi_nil_error  ) && fh[:bool_in_xsi_nil_true]
+    xsi_nil_true_out  = (not xsi_nil_error  ) && fh[:bool_out_xsi_nil_true]
+    bad_href_in       = (    href_with_pound) && fh[:bool_in_bad_href]
+    bad_href_out      = (not href_with_pound) && fh[:bool_out_bad_href]
+
+    return true if scenario_6000_in
+    return true if scenario_6000_out
+    return true if xsi_nil_true_in
+    return true if xsi_nil_true_out
+    return true if bad_href_in
+    return true if bad_href_out
+    return false if filter.filtering_applied?
+    return true
   end
 
 end

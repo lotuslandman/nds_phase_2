@@ -8,10 +8,10 @@ class DeltaRequest < ApplicationRecord
   validates :end_time, presence: true
 #  validates :parseable, presence: true # apparently setting to false fails validation
 
-  def count_filtered_notams(filter_color) # 'red' or 'blue'
+  def count_filtered_notams(filter) # 'red' or 'blue'
     self.notams.select do |notam|
-      notam.filter_selected_in(filter_color)
-    end
+      notam.filter_selected_in(filter)
+    end.size
   end
 
   def parse_and_store_time_info_to_delta_request(response_time_info_line)

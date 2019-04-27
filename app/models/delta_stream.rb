@@ -129,7 +129,7 @@ class DeltaStream < ApplicationRecord
 #    ]
 #  end
 
-  def column_chart_data(start_date, end_date, scenario, y_axis)
+  def column_chart_data(start_date, end_date, scenario, y_axis, blue_filter, red_filter)
     relevant_delta_requests = get_drs_from_range(start_date, end_date)
     # makes a hash of relevant delta_requests between start and end dates filling with start_time and duration
     plot_dr_hash_blue = {}
@@ -142,12 +142,11 @@ class DeltaStream < ApplicationRecord
         plot_dr_hash_blue[ind] = dr.duration           # duration could try dr.notams.size
       when "number_of_notams"
         # BLUE
-        plot_dr_hash_blue[ind] = dr.notams.size
-#        plot_dr_hash_blue[ind] = dr.count_filtered_notams("blue")
+        plot_dr_hash_blue[ind]  = dr.count_filtered_notams(blue_filter)
+#        plot_dr_hash_blue[ind] = dr.notams.size #dr.count_filtered_notams(blue_filter) 
+
         # RED
-#        plot_dr_hash_red[ind]  = dr.scenario_notams(scenario).size
-        #        plot_dr_hash_red[ind]  = dr.href_notams.size
-        plot_dr_hash_red[ind]  = dr.count_filtered_notams("red")
+        plot_dr_hash_red[ind]  = dr.count_filtered_notams(red_filter)
       when "not_parseable"
         plot_dr_hash_blue[ind]  = (dr.not_parseable ? 1 : 0)
       end
@@ -157,15 +156,15 @@ class DeltaStream < ApplicationRecord
 
     synced_date_array.collect do |s_date|
       notams_blue_1 << {s_date.to_s => plot_dr_hash_blue[s_date]} 
-      notams_red_1 << {s_date.to_s => plot_dr_hash_red[s_date]} 
+      notams_red_1  << {s_date.to_s => plot_dr_hash_red[s_date]} 
     end
 
     notams_blue_2 = notams_blue_1.inject{|memo, el| memo.merge( el ){|k, old_v, new_v| old_v + new_v}}
     notams_red_2  = notams_red_1.inject{ |memo, el| memo.merge( el ){|k, old_v, new_v| old_v + new_v}}
-    [
-      {name: "Blue Filtered Notams", data: notams_blue_2},
-      {name: "Red Filtered Notams", data: notams_red_2}
-    ]
+    plot_array = []
+    plot_array << {name: "Blue Filtered Notams", data: notams_blue_2}
+    plot_array << {name: "Red Filtered Notams", data: notams_red_2} if red_filter.filtering_applied?
+    plot_array
   end
 
 end

@@ -48,18 +48,26 @@ class GraphController < ApplicationController
   end
 
   def update_filter_variables
-    @blue_bool_in_scenario_6000 = (params["blue_bool_in_scenario_6000"] == "1")
-    @blue_bool_out_scenario_6000 = (params["blue_bool_out_scenario_6000"] == "1")
-    @blue_bool_in_xsi_nil_true = (params["blue_bool_in_xsi_nil_true"] == "1")
-    @blue_bool_out_xsi_nil_true = (params["blue_bool_out_xsi_nil_true"] == "1")
-    @blue_bool_in_bad_href = (params["blue_bool_in_bad_href"] == "1")
-    @blue_bool_out_bad_href = (params["blue_bool_out_bad_href"] == "1")
-    @red_bool_in_scenario_6000 = (params["red_bool_in_scenario_6000"] == "1")
-    @red_bool_out_scenario_6000 = (params["red_bool_out_scenario_6000"] == "1")
-    @red_bool_in_xsi_nil_true = (params["red_bool_in_xsi_nil_true"] == "1")
-    @red_bool_out_xsi_nil_true = (params["red_bool_out_xsi_nil_true"] == "1")
-    @red_bool_in_bad_href = (params["red_bool_in_bad_href"] == "1")
-    @red_bool_out_bad_href = (params["red_bool_out_bad_href"] == "1")
+    puts '----------'
+    filter_hash = {}
+    filter_hash[:bool_in_scenario_6000] = (params["blue_bool_in_scenario_6000"] == "1")
+    filter_hash[:bool_out_scenario_6000] = (params["blue_bool_out_scenario_6000"] == "1")
+    filter_hash[:bool_in_xsi_nil_true] = (params["blue_bool_in_xsi_nil_true"] == "1")
+    filter_hash[:bool_out_xsi_nil_true] = (params["blue_bool_out_xsi_nil_true"] == "1")
+    filter_hash[:bool_in_bad_href] = (params["blue_bool_in_bad_href"] == "1")
+    filter_hash[:bool_out_bad_href] = (params["blue_bool_out_bad_href"] == "1")
+    @filter_blue = Filter.new(filter_hash)
+    puts @filter_blue
+
+    filter_hash = {}
+    filter_hash[:bool_in_scenario_6000] = (params["red_bool_in_scenario_6000"] == "1")
+    filter_hash[:bool_out_scenario_6000] = (params["red_bool_out_scenario_6000"] == "1")
+    filter_hash[:bool_in_xsi_nil_true] = (params["red_bool_in_xsi_nil_true"] == "1")
+    filter_hash[:bool_out_xsi_nil_true] = (params["red_bool_out_xsi_nil_true"] == "1")
+    filter_hash[:bool_in_bad_href] = (params["red_bool_in_bad_href"] == "1")
+    filter_hash[:bool_out_bad_href] = (params["red_bool_out_bad_href"] == "1")
+    @filter_red = Filter.new(filter_hash)
+    puts @filter_red
   end
   
   def graph
@@ -71,8 +79,9 @@ class GraphController < ApplicationController
     @end_date = find_end_of_range
     @red_scenario  = params[:red_scenario]  # if no scenario entered no need to store
     @y_axis = session[:y_axis]
-    binding.pry
-    @get_column_chart_data = @ds.column_chart_data(@start_date, @end_date, @red_scenario, @y_axis) if ((@start_date - @end_date) < 31.days)
+    if ((@start_date - @end_date) < 2.days)
+      @get_column_chart_data = @ds.column_chart_data(@start_date, @end_date, @red_scenario, @y_axis, @filter_blue, @filter_red)
+    end
   end
 
 #  def scenario
