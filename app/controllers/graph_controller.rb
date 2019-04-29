@@ -82,6 +82,7 @@ class GraphController < ApplicationController
     if ((@start_date - @end_date) < 2.days)
       @get_column_chart_data = @ds.column_chart_data(@start_date, @end_date, @red_scenario, @y_axis, @filter_blue, @filter_red)
     end
+    @get_column_chart_data_scenario = Notam.group(:scenario).count
   end
 
 #  def scenario
@@ -169,5 +170,14 @@ class GraphController < ApplicationController
   def fntb_test
     session[:env] = "fntb_test"
     redirect_to :action => "graph"
-   end
+  end
+
+  def aixm_delta_request
+    @dr_date = params["dr_aixm_date"]
+    ds_1 = DeltaStream.find_by_id(1)
+    stream_dir = ds_1.compute_stream_file_dir
+    fn_frag = @dr_date.sub(" UTC","").split(' ').join('T')
+    file_pretty_path = stream_dir + "/files_delta_pretty/delta_" + fn_frag + "_pretty.xml"
+    @aixm_pretty = File.read(file_pretty_path)
+  end
 end

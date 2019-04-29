@@ -3,10 +3,14 @@
 Change (<a href="fntb">FNTB</a>, <a href="prod">Production</a>, <a href="acy">ACY 2nd floor test</a>)<br>
 Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Number of Notams</a>, <a href="not_parseable">Response Not Parseable</a>)
 <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
-<%= column_chart @get_column_chart_data %>
+<% top_chart_data, bottom_chart_data, sample_delta_request = @get_column_chart_data %>
+<%= column_chart top_chart_data %>
+<%= column_chart bottom_chart_data %>
+<%= sample_delta_request.to_s %>
 <% hours = (Time.parse(session[:end_date]) - Time.parse(session[:start_date]))/60.0/60.0 %>
   <table style="width:100">
     <colgroup>
+      <col style="background-color: silver">
       <col style="background-color: silver">
       <col style="background-color: silver">
       <col style="background-color: silver">
@@ -25,6 +29,7 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <th>Expand Range:</th> 
     <th>Show last hour: </th> 
     <th>Show last 12 hours:</th> 
+    <th>Show aixm delta request:</th> 
   </tr>
   <tr>
     <td><%= session[:start_date].to_s %> </td> 
@@ -35,6 +40,7 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <td> <a href="expand_left"><<</a> <a href="expand_right">>></a> </td>
     <td> <a href="last_hour">Show last hour</a> </td>
     <td> <a href="last_half_day">Show last 12 hours</a> </td>
+    <td> <a href="aixm_delta_request?dr_aixm_date=<%=sample_delta_request.to_s%>"><%= sample_delta_request.to_s %></a> </td>
   </tr>
   </table>
 

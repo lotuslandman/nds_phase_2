@@ -14,6 +14,12 @@ class DeltaRequest < ApplicationRecord
     end.size
   end
 
+  def return_filtered_notams_scenario(filter) # 'red' or 'blue'
+    self.notams.collect do |notam|
+      notam.scenario if notam.filter_selected_in(filter)   # if filter allows notam return the scenario to be counted later or grouped later
+    end
+  end
+
   def parse_and_store_time_info_to_delta_request(response_time_info_line)
     rts = response_time_info_line.split(',')
     start_time = rts[0].strip

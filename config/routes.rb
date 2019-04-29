@@ -38,5 +38,8 @@ Rails.application.routes.draw do
 
   get 'graph/scenario'
   post 'graph/scenario'
+  
+  get 'graph/aixm_delta_request'
+  post 'graph/aixm_delta_request'
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
