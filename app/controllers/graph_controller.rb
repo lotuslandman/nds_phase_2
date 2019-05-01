@@ -36,7 +36,7 @@ class GraphController < ApplicationController
   end
 
   def make_plot_header
-    header_text = "Plotting: "
+    header_text = ""
     header_text += "Response Time" if session[:y_axis] == "response_time"
     header_text += "Number of NOTAMs" if session[:y_axis] == "number_of_notams"
     header_text += "Not Parseable" if session[:y_axis] == "not_parseable" 

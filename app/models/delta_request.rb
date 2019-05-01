@@ -44,6 +44,9 @@ class DeltaRequest < ApplicationRecord
     end
 
     begin
+      if DeltaRequest.all.collect {|dr| dr.start_time}.include?(self.start_time)
+        puts "Why are we trying to save delta request with start_time of #{self.start_time}, its already in the database"
+      end
       self.save!
     rescue
       puts "Couldn't save delta_request - file_path_pretty: #{file_path_pretty} "
@@ -76,10 +79,9 @@ class DeltaRequest < ApplicationRecord
     Dir.mkdir(dir) unless File.exists?(dir)
   end
 
-  def handle_full_delta_request(file_name) # parse_response_time_save_pretty_store_in_db  WARNING: hardcoded April 2019
+  def handle_full_delta_request(file_name) 
     fn_frag = file_name.sub(" UTC","").split(' ').join('T')
 
-#    path_to_delta_files = "/home/scott/nds_phase_1/stream_files/stream_#{self.delta_stream.id}_files/2019-4/files_delta" # full_response_file_dir
     path_to_delta_files = self.delta_stream.compute_stream_file_dir + "/files_delta"
     file_path_response = path_to_delta_files + "/"        + 'delta_'+fn_frag+'.xml'
     file_path_time     = path_to_delta_files + "_time/"   + 'delta_'+fn_frag+'_time.xml'
@@ -90,12 +92,10 @@ class DeltaRequest < ApplicationRecord
       create_dir(path_to_delta_files + "_pretty/")
       parse_and_store_time_info_to_delta_request(response_time_info_line)
     rescue
-      puts "couldn't read response or time files or parse them"
+      puts "couldn't read response or time files or parse them for self.start_time #{self.start_time}"
     end
     pretty_response = parse_response_and_save_dr(response, file_path_pretty)
-    if self.not_parseable
-      puts "not parseable so not trying to save to database #{file_path_pretty}"
-    else
+    unless self.not_parseable
       save_pretty_notams_to_database(pretty_response, file_path_pretty)
     end
   end
