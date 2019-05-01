@@ -156,7 +156,7 @@ class DeltaStream < ApplicationRecord
     plot_array_number_of_notams
 
     begin
-      plot_array_scenario = red_filtered_notam_scenarios.compact.group_by(&:capitalize).map {|k,v| [k, v.length]}
+      plot_array_scenario = red_filtered_notam_scenarios.compact.group_by(&:capitalize).map {|k,v| [k, v.length]}.sort{|a, b| a[0].to_i <=> b[0].to_i}
     rescue
       binding.pry
     end
