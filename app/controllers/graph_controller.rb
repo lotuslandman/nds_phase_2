@@ -174,8 +174,8 @@ class GraphController < ApplicationController
 
   def aixm_delta_request
     @dr_date = params["dr_aixm_date"]
-    ds_1 = DeltaStream.find_by_id(1)
-    stream_dir = ds_1.compute_stream_file_dir
+    ds = DeltaStream.find_by_id(environment_to_stream_map)   # uses session[:env] to get the right DeltaStream
+    stream_dir = ds.compute_stream_file_dir
     fn_frag = @dr_date.sub(" UTC","").split(' ').join('T')
     file_pretty_path = stream_dir + "/files_delta_pretty/delta_" + fn_frag + "_pretty.xml"
     @aixm_pretty = File.read(file_pretty_path)

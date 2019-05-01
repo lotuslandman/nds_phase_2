@@ -6,7 +6,6 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
 <% top_chart_data, bottom_chart_data, sample_delta_request = @get_column_chart_data %>
 <%= column_chart top_chart_data, xtitle: "Delta Request Start Time", ytitle: "#{@plot_header}" %>
 <%= column_chart bottom_chart_data, xtitle: "Scenario Number", ytitle: "# of Scenarios", colors: ["#153"] %>
-<%= sample_delta_request.to_s %>
 <% hours = (Time.parse(session[:end_date]) - Time.parse(session[:start_date]))/60.0/60.0 %>
   <table style="width:100">
     <colgroup>
@@ -82,10 +81,12 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <td>
       <%= check_box_tag(:blue_bool_in_xsi_nil_true) %>
       <%= label_tag(:blue_bool_in_xsi_nil_true, "") %>
+      <%= @filter_blue.filter_hash[:bool_in_xsi_nil_true].to_s %>
     </td> 
     <td>
       <%= check_box_tag(:blue_bool_out_xsi_nil_true) %>
       <%= label_tag(:blue_bool_out_xsi_nil_true, "") %>
+      <%= @filter_blue.filter_hash[:bool_out_xsi_nil_true].to_s %>
     </td> 
   </tr>
   <tr>
@@ -93,10 +94,12 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <td>
       <%= check_box_tag(:blue_bool_in_bad_href) %>
       <%= label_tag(:blue_bool_in_bad_href, "") %>
+      <%= @filter_blue.filter_hash[:bool_in_bad_href].to_s %>
     </td> 
     <td>
       <%= check_box_tag(:blue_bool_out_bad_href) %>
       <%= label_tag(:blue_bool_out_bad_href, "") %>
+      <%= @filter_blue.filter_hash[:bool_out_bad_href].to_s %>
     </td> 
   </tr>
 </table>
@@ -136,10 +139,12 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <td>
       <%= check_box_tag(:red_bool_in_xsi_nil_true) %>
       <%= label_tag(:red_bool_in_xsi_nil_true, "") %>
+      <%= @filter_red.filter_hash[:bool_in_xsi_nil_true].to_s %>
     </td> 
     <td>
       <%= check_box_tag(:red_bool_out_xsi_nil_true) %>
       <%= label_tag(:red_bool_out_xsi_nil_true, "") %>
+      <%= @filter_red.filter_hash[:bool_out_xsi_nil_true].to_s %>
     </td> 
   </tr>
   <tr>
@@ -147,10 +152,12 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <td>
       <%= check_box_tag(:red_bool_in_bad_href) %>
       <%= label_tag(:red_bool_in_bad_href, "") %>
+      <%= @filter_red.filter_hash[:bool_in_bad_href].to_s %>
     </td> 
     <td>
       <%= check_box_tag(:red_bool_out_bad_href) %>
       <%= label_tag(:red_bool_out_bad_href, "") %>
+      <%= @filter_red.filter_hash[:bool_out_bad_href].to_s %>
     </td> 
   </tr>
 </table>
