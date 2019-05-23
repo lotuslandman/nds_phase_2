@@ -53,6 +53,13 @@ class DeltaRequest < ApplicationRecord
     end
     return pretty_response
   end
+
+  def validate_message(document_path, schema_path, root_element)
+    schema = Nokogiri::XML::Schema(File.read(schema_path))
+    document = Nokogiri::XML(File.read(document_path))
+    binding.pry
+    schema.validate(document.xpath("//#{root_element}").to_s)
+  end
   
   def save_pretty_notams_to_database(pretty_response, file_path_pretty)
     begin
@@ -63,6 +70,16 @@ class DeltaRequest < ApplicationRecord
 
     doc = pretty_response.remove_namespaces!       # seems to be necessary for Nokogiri - simplifies XPATH statements too
     notam_docs = doc.xpath("//AIXMBasicMessage")   # prepare to store to Notam object
+
+##############################################################
+#    Not working yet but good code for on-the-fly validation    
+#    schema_path = "../NSRR_docs/FNS_NOTAM_Distribution_schema/wfs.xsd"
+#    document_path = file_path_pretty
+#    root_element = "Envelope"
+#    validate_message(file_path_pretty, schema_path, root_element).each do |error|
+#      puts error.message
+#    end
+    
     puts "Number of NOTAMs in message #{self.number_returned} not equal to what was extracted #{notam_docs.size}" if notam_docs.size != self.number_returned.to_i
 
     notam_docs.collect do |notam_doc|

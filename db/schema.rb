@@ -21,6 +21,9 @@ ActiveRecord::Schema.define(version: 20190315012758) do
     t.datetime "end_time"
     t.boolean "not_parseable"
     t.string "number_returned"
+    t.boolean "valid_fnd"
+    t.boolean "valid_fnp"
+    t.boolean "valid_fnpv2"
     t.index ["delta_stream_id"], name: "index_delta_requests_on_delta_stream_id"
     t.index ["start_time"], name: "index_delta_requests_on_start_time"
   end
