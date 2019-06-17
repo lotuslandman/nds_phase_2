@@ -50,6 +50,8 @@ class GraphController < ApplicationController
   def update_filter_variables
     puts '----------'
     filter_hash = {}
+    filter_hash[:in_scenarios] = params["blue_in_scenarios"] ||= ''
+    filter_hash[:out_scenarios] = params["blue_out_scenarios"] ||= ''
     filter_hash[:bool_in_scenario_6000] = (params["blue_bool_in_scenario_6000"] == "1")
     filter_hash[:bool_out_scenario_6000] = (params["blue_bool_out_scenario_6000"] == "1")
     filter_hash[:bool_in_xsi_nil_true] = (params["blue_bool_in_xsi_nil_true"] == "1")
@@ -57,9 +59,10 @@ class GraphController < ApplicationController
     filter_hash[:bool_in_bad_href] = (params["blue_bool_in_bad_href"] == "1")
     filter_hash[:bool_out_bad_href] = (params["blue_bool_out_bad_href"] == "1")
     @filter_blue = Filter.new(filter_hash)
-    puts @filter_blue
 
     filter_hash = {}
+    filter_hash[:in_scenarios] = params["red_in_scenarios"] ||= ''
+    filter_hash[:out_scenarios] = params["red_out_scenarios"] ||= ''
     filter_hash[:bool_in_scenario_6000] = (params["red_bool_in_scenario_6000"] == "1")
     filter_hash[:bool_out_scenario_6000] = (params["red_bool_out_scenario_6000"] == "1")
     filter_hash[:bool_in_xsi_nil_true] = (params["red_bool_in_xsi_nil_true"] == "1")
@@ -67,7 +70,6 @@ class GraphController < ApplicationController
     filter_hash[:bool_in_bad_href] = (params["red_bool_in_bad_href"] == "1")
     filter_hash[:bool_out_bad_href] = (params["red_bool_out_bad_href"] == "1")
     @filter_red = Filter.new(filter_hash)
-    puts @filter_red
   end
   
   def graph
@@ -179,5 +181,14 @@ class GraphController < ApplicationController
     fn_frag = @dr_date.sub(" UTC","").split(' ').join('T')
     file_pretty_path = stream_dir + "/files_delta_pretty/delta_" + fn_frag + "_pretty.xml"
     @aixm_pretty = File.read(file_pretty_path)
+  end
+
+  def aixm_delta_request_raw
+    @dr_date = params["dr_aixm_date"]
+    ds = DeltaStream.find_by_id(environment_to_stream_map)   # uses session[:env] to get the right DeltaStream
+    stream_dir = ds.compute_stream_file_dir
+    fn_frag = @dr_date.sub(" UTC","").split(' ').join('T')
+    file_raw_path = stream_dir + "/files_delta/delta_" + fn_frag + ".xml"
+    @aixm_raw = File.read(file_raw_path)
   end
 end

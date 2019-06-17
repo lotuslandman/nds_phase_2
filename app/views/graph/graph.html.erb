@@ -18,6 +18,7 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
       <col style="background-color: silver">
       <col style="background-color: silver">
       <col style="background-color: silver">
+      <col style="background-color: silver">
     </colgroup>
   <tr>
     <th>Start Date:</th>
@@ -28,7 +29,8 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <th>Expand Range:</th> 
     <th>Show last hour: </th> 
     <th>Show last 12 hours:</th> 
-    <th>Show aixm delta request:</th> 
+    <th>Show aixm del req (pp):</th> 
+    <th>Show aixm del req (raw):</th> 
   </tr>
   <tr>
     <td><%= session[:start_date].to_s %> </td> 
@@ -40,6 +42,7 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <td> <a href="last_hour">Show last hour</a> </td>
     <td> <a href="last_half_day">Show last 12 hours</a> </td>
     <td> <a href="aixm_delta_request?dr_aixm_date=<%=sample_delta_request.to_s%>"><%= sample_delta_request.to_s %></a> </td>
+    <td> <a href="aixm_delta_request_raw?dr_aixm_date=<%=sample_delta_request.to_s%>"><%= sample_delta_request.to_s %></a> </td>
   </tr>
   </table>
 
@@ -62,6 +65,15 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <th style="color:blue">Blue FILTER BY:</th>
     <th>Filter In</th> 
     <th>Filter Out</th> 
+  </tr>
+  <tr>
+    <td>Scenarios</td>
+    <td>
+      <%= text_field_tag(:blue_in_scenarios) %>
+    </td> 
+    <td>
+      <%= text_field_tag(:blue_out_scenarios) %>
+    </td> 
   </tr>
   <tr>
     <td>Scenario 6000</td>
@@ -120,6 +132,15 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
     <th style="color:red">Red FILTER BY:</th>
     <th>Filter In</th> 
     <th>Filter Out</th> 
+  </tr>
+  <tr>
+    <td>Scenarios</td>
+    <td>
+      <%= text_field_tag(:red_in_scenarios) %>
+    </td> 
+    <td>
+      <%= text_field_tag(:red_out_scenarios) %>
+    </td> 
   </tr>
   <tr>
     <td>Scenario 6000</td>

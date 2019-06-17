@@ -7,7 +7,8 @@ class DeltaStream < ApplicationRecord
 
   def compute_stream_file_dir
     stream_number = self.id.to_s
-    month_str = Time.now.month.to_s
+#    month_str = Time.now.month.to_s
+    month_str = (Time.now - 1.month).month.to_s  # Don't let this go to production HELP
     year_str = Time.now.year.to_s
     # the following string will produce something like this: "../stream_files/stream_1_files/2019-5/files_delta/*"
     if Rails.env.development?
@@ -58,7 +59,7 @@ class DeltaStream < ApplicationRecord
     puts "entry in database that is not in the filesystem #{should_be_empty.size} #{should_be_empty[0].to_s}" if not should_be_empty.empty?
     dates_to_get_full_sort = dates_to_get_full.sort
     if dates_to_get_full_sort.size > 7   # limit chunk to put in database to 55
-      dates_to_get = dates_to_get_full_sort[-30..-1]  # [-1..-1] gets one from troubleshooting
+      dates_to_get = dates_to_get_full_sort[-10..-1]  # [-1..-1] gets one from troubleshooting
     else
       dates_to_get = dates_to_get_full_sort
     end
@@ -124,6 +125,7 @@ class DeltaStream < ApplicationRecord
     synced_date_array = create_array_uniform_dates(start_date, end_date)
     red_filtered_notam_scenarios = []   # will fill this up with contributions from each relevant_delta_request's notams
     dr_start_time = ""
+
     relevant_delta_requests.collect do |dr|
       ind = round_to_earlier_3_min_sync_date(dr.start_time)  # start time
       dr_start_time = dr.start_time

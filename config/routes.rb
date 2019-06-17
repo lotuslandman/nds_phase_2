@@ -41,5 +41,8 @@ Rails.application.routes.draw do
   
   get 'graph/aixm_delta_request'
   post 'graph/aixm_delta_request'
+
+  get 'graph/aixm_delta_request_raw'
+  post 'graph/aixm_delta_request_raw'
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

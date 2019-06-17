@@ -54,6 +54,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'pry-rails', group: [:development, :test]
+gem 'pry-byebug', group: [:development, :test]   # added June 2019
 
 gem 'nokogiri'
 

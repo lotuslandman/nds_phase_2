@@ -39,29 +39,38 @@ class Notam < ApplicationRecord
     end
   end
 
+  def in_scenario_list(array_of_scenarios_as_characters)
+    array_of_scenarios_as_characters.include?(self.scenario)
+  end
+  
   def scenario_6000
     self.scenario == '6000'
   end
   
   def filter_selected_in(filter)
+
     fh = filter.filter_hash
     raise "Can't have both in and out scenario_6000 specified" if fh[:bool_in_scenario_6000] && fh[:bool_out_scenario_6000] 
     raise "Can't have both in and out xsi_nil_error specified" if fh[:bool_in_xsi_nil_true] && fh[:bool_out_xsi_nil_true] 
     raise "Can't have both in and out bad_href specified" if fh[:bool_in_bad_href] && fh[:bool_out_bad_href]
-    scenario_6000_in  = (   scenario_6000   ) && fh[:bool_in_scenario_6000]
-    scenario_6000_out = (not scenario_6000  ) && fh[:bool_out_scenario_6000]
-    xsi_nil_true_in   = (    xsi_nil_error  ) && fh[:bool_in_xsi_nil_true]
-    xsi_nil_true_out  = (not xsi_nil_error  ) && fh[:bool_out_xsi_nil_true]
-    bad_href_in       = (    href_with_pound) && fh[:bool_in_bad_href]
-    bad_href_out      = (not href_with_pound) && fh[:bool_out_bad_href]
+    scenarios_in      = (     in_scenario_list(fh[:in_scenarios ]))  && (fh[:in_scenarios] != '')
+    scenarios_out     = (not (in_scenario_list(fh[:out_scenarios]))) && (fh[:out_scenarios] != '')
+    scenario_6000_in  = (   scenario_6000   )                        && fh[:bool_in_scenario_6000]
+    scenario_6000_out = (not scenario_6000  )                        && fh[:bool_out_scenario_6000]
+    xsi_nil_true_in   = (    xsi_nil_error  )                        && fh[:bool_in_xsi_nil_true]
+    xsi_nil_true_out  = (not xsi_nil_error  )                        && fh[:bool_out_xsi_nil_true]
+    bad_href_in       = (    href_with_pound)                        && fh[:bool_in_bad_href]
+    bad_href_out      = (not href_with_pound)                        && fh[:bool_out_bad_href]
 
-    return true if scenario_6000_in
+    return true if scenarios_in
+    return true if scenarios_out
+    return true if scenario_6000_in      # this notam is counted for this filter
     return true if scenario_6000_out
     return true if xsi_nil_true_in
     return true if xsi_nil_true_out
     return true if bad_href_in
     return true if bad_href_out
-    return false if filter.filtering_applied?
+    return false if filter.filtering_applied?  # if notam not specifically selected in, then select it out if filtering applied for this filter
     return true
   end
 

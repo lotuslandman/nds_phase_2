@@ -9,7 +9,7 @@ class Filter
   end
 
   def filtering_applied?
-    @filter_hash.values.any?
+    not (@filter_hash.values - [false, '']).empty?
   end
 end
 
