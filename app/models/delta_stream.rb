@@ -7,8 +7,8 @@ class DeltaStream < ApplicationRecord
 
   def compute_stream_file_dir
     stream_number = self.id.to_s
-#    month_str = Time.now.month.to_s
-    month_str = (Time.now - 1.month).month.to_s  # Don't let this go to production HELP
+    month_str = Time.now.month.to_s
+#    month_str = (Time.now - 1.month).month.to_s  # Don't let this go to production HELP
     year_str = Time.now.year.to_s
     # the following string will produce something like this: "../stream_files/stream_1_files/2019-5/files_delta/*"
     if Rails.env.development?
