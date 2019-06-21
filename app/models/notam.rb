@@ -10,8 +10,6 @@ class Notam < ApplicationRecord
     self.classification = notam_doc.xpath(".//classification/text()")
     self.accountability = notam_doc.xpath(".//accountId/text()")
     self.location = notam_doc.xpath(".//location/text()")
-    aa = "cl = #{classification}, ac = #{self.accountability}, lo = #{self.location}, sc = #{self.scenario}"
-    puts aa
     self.end_position = notam_doc.xpath(".//endPosition/text()")
     xsi_nil_list = notam_doc.xpath(".//*[@nil='true'][text()]")
     self.xsi_nil_error = xsi_nil_list.size > 0
@@ -28,19 +26,19 @@ class Notam < ApplicationRecord
   end
 
   def in_scenario_list(array_of_scenarios_as_characters)
-    array_of_scenarios_as_characters.include?(self.scenario)
+    array_of_scenarios_as_characters.gsub(/\s+/, "").split(',').include?(self.scenario)
   end
   
   def in_location_list(array_of_locations_as_characters)
-    array_of_locations_as_characters.include?(self.location)
+    array_of_locations_as_characters.gsub(/\s+/, "").split(',').include?(self.location)
   end
   
   def in_accountability_list(array_of_accountabilitys_as_characters)
-    array_of_accountabilitys_as_characters.include?(self.accountability)
+    array_of_accountabilitys_as_characters.gsub(/\s+/, "").split(',').include?(self.accountability)
   end
   
   def in_classification_list(array_of_classifications_as_characters)
-    array_of_classifications_as_characters.include?(self.classification)
+    array_of_classifications_as_characters.gsub(/\s+/, "").split(',').include?(self.classification)
   end
   
   def scenario_6000
