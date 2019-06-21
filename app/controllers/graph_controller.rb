@@ -50,6 +50,15 @@ class GraphController < ApplicationController
   def update_filter_variables
     puts '----------'
     filter_hash = {}
+    filter_hash[:in_classifications] = params["blue_in_classifications"] ||= ''
+    filter_hash[:out_classifications] = params["blue_out_classifications"] ||= ''
+
+    filter_hash[:in_locations] = params["blue_in_locations"] ||= ''
+    filter_hash[:out_locations] = params["blue_out_locations"] ||= ''
+
+    filter_hash[:in_accountabilitys] = params["blue_in_accountabilitys"] ||= ''
+    filter_hash[:out_accountabilitys] = params["blue_out_accountabilitys"] ||= ''
+
     filter_hash[:in_scenarios] = params["blue_in_scenarios"] ||= ''
     filter_hash[:out_scenarios] = params["blue_out_scenarios"] ||= ''
     filter_hash[:bool_in_scenario_6000] = (params["blue_bool_in_scenario_6000"] == "1")
@@ -61,6 +70,15 @@ class GraphController < ApplicationController
     @filter_blue = Filter.new(filter_hash)
 
     filter_hash = {}
+    filter_hash[:in_classifications] = params["red_in_classifications"] ||= ''
+    filter_hash[:out_classifications] = params["red_out_classifications"] ||= ''
+
+    filter_hash[:in_locations] = params["red_in_locations"] ||= ''
+    filter_hash[:out_locations] = params["red_out_locations"] ||= ''
+
+    filter_hash[:in_accountabilitys] = params["red_in_accountabilitys"] ||= ''
+    filter_hash[:out_accountabilitys] = params["red_out_accountabilitys"] ||= ''
+
     filter_hash[:in_scenarios] = params["red_in_scenarios"] ||= ''
     filter_hash[:out_scenarios] = params["red_out_scenarios"] ||= ''
     filter_hash[:bool_in_scenario_6000] = (params["red_bool_in_scenario_6000"] == "1")
@@ -79,12 +97,12 @@ class GraphController < ApplicationController
     @ds = DeltaStream.find_by_id(environment_to_stream_map)   # uses session[:env] to get the right DeltaStream
     @start_date = find_start_of_range
     @end_date = find_end_of_range
-    @red_scenario  = params[:red_scenario]  # if no scenario entered no need to store
+#    @red_scenario  = params[:red_scenario]  # if no scenario entered no need to store
     @y_axis = session[:y_axis]
     if ((@start_date - @end_date) < 2.days)
-      @get_column_chart_data = @ds.column_chart_data(@start_date, @end_date, @red_scenario, @y_axis, @filter_blue, @filter_red)
+      @get_column_chart_data = @ds.column_chart_data(@start_date, @end_date, @y_axis, @filter_blue, @filter_red)
     end
-    @get_column_chart_data_scenario = Notam.group(:scenario).count
+#    @get_column_chart_data_scenario = Notam.group(:scenario).count
   end
 
 #  def scenario

@@ -3,6 +3,11 @@ class CreateNotams < ActiveRecord::Migration[5.1]
     create_table :notams do |t|
       t.string :transaction_id
       t.string :scenario
+      t.string :location
+      t.string :accountability
+      t.string :classification
+      t.string :notam_number
+      t.string :natural_key
       t.boolean :xsi_nil_error
       t.boolean :href_with_pound
       t.datetime :end_position

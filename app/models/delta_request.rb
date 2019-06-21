@@ -20,6 +20,24 @@ class DeltaRequest < ApplicationRecord
     end
   end
 
+  def return_filtered_notams_location(filter) # 'red' or 'blue'
+    self.notams.collect do |notam|
+      notam.scenario if notam.filter_selected_in(filter)   # if filter allows notam return the scenario to be counted later or grouped later
+    end
+  end
+
+  def return_filtered_notams_accountability(filter) # 'red' or 'blue'
+    self.notams.collect do |notam|
+      notam.accountability if notam.filter_selected_in(filter)   # if filter allows notam return the scenario to be counted later or grouped later
+    end
+  end
+
+  def return_filtered_notams_classification(filter) # 'red' or 'blue'
+    self.notams.collect do |notam|
+      notam.classification if notam.filter_selected_in(filter)   # if filter allows notam return the scenario to be counted later or grouped later
+    end
+  end
+
   def parse_and_store_time_info_to_delta_request(response_time_info_line)
     rts = response_time_info_line.split(',')
     start_time = rts[0].strip
@@ -118,11 +136,23 @@ class DeltaRequest < ApplicationRecord
 
   def scenario_notams(scenario)
 #    self_notams_scenario = self_notams.by_scenario(602)    # this works but it is even slower than the select loop around self_notams
-    self_notams_scenario = self.notams.select{|notam| notam.scenario == scenario}
+    self.notams.select{|notam| notam.scenario == scenario}
+  end
+  
+  def location_notams(location)
+    self.notams.select{|notam| notam.location == location}
+  end
+  
+  def accountability_notams(accountability)
+    self.notams.select{|notam| notam.accountability == accountability}
+  end
+  
+  def classification_notams(classification)
+    self.notams.select{|notam| notam.classification == classification}
   end
   
   def href_notams()
-    self_notams_scenario = self.notams.select{|notam| notam.href_with_pound}
+    self.notams.select{|notam| notam.href_with_pound}
   end
   
 end

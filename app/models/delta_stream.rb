@@ -117,13 +117,16 @@ class DeltaStream < ApplicationRecord
     end
   end
 
-  def column_chart_data(start_date, end_date, scenario, y_axis, blue_filter, red_filter)
+  def column_chart_data(start_date, end_date, y_axis, blue_filter, red_filter)
     relevant_delta_requests = get_drs_from_range(start_date, end_date)
     # makes a hash of relevant delta_requests between start and end dates filling with start_time and duration
     plot_dr_hash_blue = {}
     plot_dr_hash_red = {}
     synced_date_array = create_array_uniform_dates(start_date, end_date)
     red_filtered_notam_scenarios = []   # will fill this up with contributions from each relevant_delta_request's notams
+    red_filtered_notam_locations = []   # will fill this up with contributions from each relevant_delta_request's notams
+    red_filtered_notam_accountabilitys = []   # will fill this up with contributions from each relevant_delta_request's notams
+    red_filtered_notam_classifications = []   # will fill this up with contributions from each relevant_delta_request's notams
     dr_start_time = ""
 
     relevant_delta_requests.collect do |dr|
@@ -135,8 +138,10 @@ class DeltaStream < ApplicationRecord
       when "number_of_notams"
         plot_dr_hash_blue[ind] = dr.count_filtered_notams(blue_filter) # BLUE
         plot_dr_hash_red[ind]  = dr.count_filtered_notams(red_filter)  # RED
-        x = dr.return_filtered_notams_scenario(red_filter)
-        red_filtered_notam_scenarios += x
+        red_filtered_notam_scenarios += dr.return_filtered_notams_scenario(red_filter)
+        red_filtered_notam_locations += dr.return_filtered_notams_location(red_filter)
+        red_filtered_notam_accountabilitys += dr.return_filtered_notams_accountability(red_filter)
+        red_filtered_notam_classifications += dr.return_filtered_notams_classification(red_filter)
       when "not_parseable"
         plot_dr_hash_blue[ind]  = (dr.not_parseable ? 1 : 0)
       end
@@ -158,11 +163,14 @@ class DeltaStream < ApplicationRecord
     plot_array_number_of_notams
 
     begin
-      plot_array_scenario = red_filtered_notam_scenarios.compact.group_by(&:capitalize).map {|k,v| [k, v.length]}.sort{|a, b| a[0].to_i <=> b[0].to_i}
+      plot_array_scenario       = red_filtered_notam_scenarios.compact.group_by(&:capitalize).map {|k,v| [k, v.length]}.sort{|a, b| a[0].to_i <=> b[0].to_i}
+      plot_array_location       = red_filtered_notam_locations.compact.group_by(&:capitalize).map {|k,v| [k, v.length]}.sort{|a, b| a[0].to_i <=> b[0].to_i}
+      plot_array_accountability = red_filtered_notam_accountabilitys.compact.group_by(&:capitalize).map {|k,v| [k, v.length]}.sort{|a, b| a[0].to_i <=> b[0].to_i}
+      plot_array_classification = red_filtered_notam_classifications.compact.group_by(&:capitalize).map {|k,v| [k, v.length]}.sort{|a, b| a[0].to_i <=> b[0].to_i}
     rescue
       binding.pry
     end
-    outp = [plot_array_number_of_notams, plot_array_scenario, dr_start_time]
+    outp = [plot_array_number_of_notams, plot_array_scenario, dr_start_time, plot_array_location, plot_array_accountability, plot_array_classification]
     outp
   end
 
