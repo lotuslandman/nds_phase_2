@@ -7,17 +7,50 @@ class Notam < ApplicationRecord
   def fill(notam_doc)
     self.transaction_id = notam_doc.attr('id')[-8..-1]
     self.scenario     = notam_doc.xpath(".//scenario/text()")
-    self.classification = notam_doc.xpath(".//classification/text()")
     self.accountability = notam_doc.xpath(".//accountId/text()")
     self.location = notam_doc.xpath(".//location/text()")
+    self.classification = notam_doc.xpath(".//classification/text()")
+    self.issued = notam_doc.xpath(".//issued/text()")
+    self.notam_number = notam_doc.xpath(".//number/text()").to_s
+    
+    case self.classification
+    when "DOM"
+      month = Time.parse(issued).month.to_s
+      self.natural_key = [accountability, month, notam_number, location, issued].join('-')
+    when "INTL"
+      series = notam_doc.xpath(".//series/text()").to_s
+      year_abrev = Time.parse(issued).year.to_s[3,4] # pulls out 19 from 2019
+      self.natural_key = [accountability, series, notam_number, year_abrev, location, issued].join('-')
+    end    
     self.end_position = notam_doc.xpath(".//endPosition/text()")
     xsi_nil_list = notam_doc.xpath(".//*[@nil='true'][text()]")
     self.xsi_nil_error = xsi_nil_list.size > 0
+#    binding.pry if scenario.to_i == 30
+
     begin
       self.href_with_pound = (notam_doc.xpath(".//associatedAirportHeliport").attribute('href').value.to_s[0] == '#')
     rescue
-      false
+      self.href_with_pound = false
     end
+
+    begin 
+      self.pre_ver_2_12 = false
+      tw = notam_doc.xpath(".//Taxiway")
+      designator = tw.xpath(".//designator")
+      self.pre_ver_2_12 = (not designator.empty?)
+    rescue
+      self.pre_ver_2_12 = false
+    end
+
+    begin 
+      self.post_ver_2_12 = false
+      tw = notam_doc.xpath(".//Taxiway")
+      annotation = tw.xpath(".//annotation")
+      self.post_ver_2_12 = (not annotation.empty?)
+    rescue
+      self.post_ver_2_12 = false
+    end
+    
     begin
       self.save!
     rescue
@@ -63,8 +96,15 @@ class Notam < ApplicationRecord
 
     xsi_nil_true_in   = (not xsi_nil_error  )                        && fh[:bool_in_xsi_nil_true]
     xsi_nil_true_out  = (    xsi_nil_error  )                        && fh[:bool_out_xsi_nil_true]
-    bad_href_in       = (not href_with_pound)                        && fh[:bool_in_bad_href]
+
+    bad_href_in       = (not href_with_pound)                        && fh[:bool_in_bad_href]                # need to clean this up nomencalture dichotomy in single line
     bad_href_out      = (    href_with_pound)                        && fh[:bool_out_bad_href]
+
+    pre_ver_2_12_in   = (not pre_ver_2_12)                           && fh[:bool_in_pre_ver_2_12]
+    pre_ver_2_12_out  = (    pre_ver_2_12)                           && fh[:bool_out_pre_ver_2_12]
+
+    post_ver_2_12_in  = (not post_ver_2_12)                          && fh[:bool_in_post_ver_2_12]
+    post_ver_2_12_out = (    post_ver_2_12)                          && fh[:bool_out_post_ver_2_12]
 
     # if doesn't meet critera for being in and filter was on flag this for returning false
 
@@ -83,6 +123,10 @@ class Notam < ApplicationRecord
     return false if xsi_nil_true_out
     return false if bad_href_in
     return false if bad_href_out
+    return false if pre_ver_2_12_in
+    return false if pre_ver_2_12_out
+    return false if post_ver_2_12_in
+    return false if post_ver_2_12_out
 
 #    return false if filter.filtering_applied?  # if notam not specifically selected in, then select it out if filtering applied for this filter
     return true

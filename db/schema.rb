@@ -38,13 +38,16 @@ ActiveRecord::Schema.define(version: 20190315012758) do
   create_table "notams", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "transaction_id"
     t.string "scenario"
-    t.string "location"
     t.string "accountability"
+    t.string "location"
+    t.string "issued"
     t.string "classification"
     t.string "notam_number"
     t.string "natural_key"
     t.boolean "xsi_nil_error"
     t.boolean "href_with_pound"
+    t.boolean "pre_ver_2_12"
+    t.boolean "post_ver_2_12"
     t.datetime "end_position"
     t.bigint "delta_request_id"
     t.datetime "created_at", null: false

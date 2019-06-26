@@ -67,6 +67,10 @@ class GraphController < ApplicationController
     filter_hash[:bool_out_xsi_nil_true] = (params["blue_bool_out_xsi_nil_true"] == "1")
     filter_hash[:bool_in_bad_href] = (params["blue_bool_in_bad_href"] == "1")
     filter_hash[:bool_out_bad_href] = (params["blue_bool_out_bad_href"] == "1")
+    filter_hash[:bool_in_pre_ver_2_12] = (params["blue_bool_in_pre_ver_2_12"] == "1")
+    filter_hash[:bool_out_pre_ver_2_12] = (params["blue_bool_out_pre_ver_2_12"] == "1")
+    filter_hash[:bool_in_post_ver_2_12] = (params["blue_bool_in_post_ver_2_12"] == "1")
+    filter_hash[:bool_out_post_ver_2_12] = (params["blue_bool_out_post_ver_2_12"] == "1")
     @filter_blue = Filter.new(filter_hash)
 
     filter_hash = {}
@@ -87,6 +91,11 @@ class GraphController < ApplicationController
     filter_hash[:bool_out_xsi_nil_true] = (params["red_bool_out_xsi_nil_true"] == "1")
     filter_hash[:bool_in_bad_href] = (params["red_bool_in_bad_href"] == "1")
     filter_hash[:bool_out_bad_href] = (params["red_bool_out_bad_href"] == "1")
+
+    filter_hash[:bool_in_pre_ver_2_12] = (params["red_bool_in_pre_ver_2_12"] == "1")
+    filter_hash[:bool_out_pre_ver_2_12] = (params["red_bool_out_pre_ver_2_12"] == "1")
+    filter_hash[:bool_in_post_ver_2_12] = (params["red_bool_in_post_ver_2_12"] == "1")
+    filter_hash[:bool_out_post_ver_2_12] = (params["red_bool_out_post_ver_2_12"] == "1")
     @filter_red = Filter.new(filter_hash)
   end
   

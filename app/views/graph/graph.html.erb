@@ -129,6 +129,32 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
       <%= @filter_blue.filter_hash[:bool_out_bad_href].to_s %>
     </td> 
   </tr>
+  <tr>
+    <td>pre ver 2.12</td>
+    <td>
+      <%= check_box_tag(:blue_bool_in_pre_ver_2_12) %>
+      <%= label_tag(:blue_bool_in_pre_ver_2_12, "") %>
+      <%= @filter_blue.filter_hash[:bool_in_pre_ver_2_12].to_s %>
+    </td> 
+    <td>
+      <%= check_box_tag(:blue_bool_out_pre_ver_2_12) %>
+      <%= label_tag(:blue_bool_out_pre_ver_2_12, "") %>
+      <%= @filter_blue.filter_hash[:bool_out_pre_ver_2_12].to_s %>
+    </td> 
+  </tr>
+  <tr>
+    <td>post ver 2.12</td>
+    <td>
+      <%= check_box_tag(:blue_bool_in_post_ver_2_12) %>
+      <%= label_tag(:blue_bool_in_post_ver_2_12, "") %>
+      <%= @filter_blue.filter_hash[:bool_in_post_ver_2_12].to_s %>
+    </td> 
+    <td>
+      <%= check_box_tag(:blue_bool_out_post_ver_2_12) %>
+      <%= label_tag(:blue_bool_out_post_ver_2_12, "") %>
+      <%= @filter_blue.filter_hash[:bool_out_post_ver_2_12].to_s %>
+    </td> 
+  </tr>
 </table>
 
     </td>
@@ -209,6 +235,32 @@ Change (<a href="response_time">Response Time</a>, <a href="number_of_notams">Nu
       <%= check_box_tag(:red_bool_out_bad_href) %>
       <%= label_tag(:red_bool_out_bad_href, "") %>
       <%= @filter_red.filter_hash[:bool_out_bad_href].to_s %>
+    </td> 
+  </tr>
+  <tr>
+    <td>pre ver 2.12</td>
+    <td>
+      <%= check_box_tag(:red_bool_in_pre_ver_2_12) %>
+      <%= label_tag(:red_bool_in_pre_ver_2_12, "") %>
+      <%= @filter_red.filter_hash[:bool_in_pre_ver_2_12].to_s %>
+    </td> 
+    <td>
+      <%= check_box_tag(:red_bool_out_pre_ver_2_12) %>
+      <%= label_tag(:red_bool_out_pre_ver_2_12, "") %>
+      <%= @filter_red.filter_hash[:bool_out_pre_ver_2_12].to_s %>
+    </td> 
+  </tr>
+  <tr>
+    <td>post ver 2.12</td>
+    <td>
+      <%= check_box_tag(:red_bool_in_post_ver_2_12) %>
+      <%= label_tag(:red_bool_in_post_ver_2_12, "") %>
+      <%= @filter_red.filter_hash[:bool_in_post_ver_2_12].to_s %>
+    </td> 
+    <td>
+      <%= check_box_tag(:red_bool_out_post_ver_2_12) %>
+      <%= label_tag(:red_bool_out_post_ver_2_12, "") %>
+      <%= @filter_red.filter_hash[:bool_out_post_ver_2_12].to_s %>
     </td> 
   </tr>
 </table>
