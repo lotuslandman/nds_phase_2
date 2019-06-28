@@ -25,7 +25,6 @@ class Notam < ApplicationRecord
     self.end_position = notam_doc.xpath(".//endPosition/text()")
     xsi_nil_list = notam_doc.xpath(".//*[@nil='true'][text()]")
     self.xsi_nil_error = xsi_nil_list.size > 0
-#    binding.pry if scenario.to_i == 30
 
     begin
       self.href_with_pound = (notam_doc.xpath(".//associatedAirportHeliport").attribute('href').value.to_s[0] == '#')
@@ -46,11 +45,11 @@ class Notam < ApplicationRecord
       self.post_ver_2_12 = false
       tw = notam_doc.xpath(".//Taxiway")
       annotation = tw.xpath(".//annotation")
-      self.post_ver_2_12 = (not annotation.empty?)
+      self.post_ver_2_12 = ("taxiwayDesignator" == annotation.xpath(".//propertyName/text()").to_s)
     rescue
       self.post_ver_2_12 = false
     end
-    
+
     begin
       self.save!
     rescue
