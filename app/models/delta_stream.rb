@@ -59,7 +59,7 @@ class DeltaStream < ApplicationRecord
     puts "entry in database that is not in the filesystem #{should_be_empty.size} #{should_be_empty[0].to_s}" if not should_be_empty.empty?
     dates_to_get_full_sort = dates_to_get_full.sort
     if dates_to_get_full_sort.size > 7   # limit chunk to put in database to 55
-      dates_to_get = dates_to_get_full_sort[-10..-1]  # [-1..-1] gets one from troubleshooting
+      dates_to_get = dates_to_get_full_sort[-2..-1]  # [-1..-1] gets one from troubleshooting
     else
       dates_to_get = dates_to_get_full_sort
     end
